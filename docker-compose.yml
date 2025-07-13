@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  spring:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      #   - C:\Users\unabi\docker-data:/app/data
+      - ./docker-data:/app/data
+      - ./firebase-config:/app/firebase-config
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
