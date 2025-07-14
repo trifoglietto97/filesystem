@@ -1,6 +1,10 @@
 package com.example.filesystem.service;
 
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -12,14 +16,16 @@ public class StorageServiceSwitcher {
         this.storageServices = storageServices;
     }
 
-    public void writeFile(String storageType, String filename, String content) throws Exception {
-        StorageService service = getStorageService(storageType);
-        service.writeFile(filename, content);
+    public InputStream readFileStream(String storageType, String filename) throws Exception {
+        return getStorageService(storageType).readFileStream(filename);
     }
 
-    public String readFile(String storageType, String filename) throws Exception {
-        StorageService service = getStorageService(storageType);
-        return service.readFile(filename);
+    public List<String> listFiles(String storageType, String path, boolean recursive) throws IOException {
+        return getStorageService(storageType).listFiles(path, recursive);
+    }
+
+    public void deleteFile(String storageType, String path) throws IOException {
+        getStorageService(storageType).deleteFile(path);
     }
 
     private StorageService getStorageService(String storageType) {
@@ -28,8 +34,15 @@ public class StorageServiceSwitcher {
             throw new IllegalArgumentException("Storage type non supportato: " + storageType);
         }
         return service;
-
-        
     }
-}
 
+    public void writeFileBytes(String storageType, String path, byte[] content) throws Exception {
+        getStorageService(storageType).writeFileBytes(path, content);
+    }
+
+    public long getFileSize(String storageType, String path) throws Exception {
+        return getStorageService(storageType).getFileSize(path);
+    }
+
+
+}
